@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>memberUpdateAction</title>
+</head>
+<body>
+<%
+try {
+//로그인중 접근시 회원정보수정처리 진행    
+//수정화면에 입력된 데이터 받기    
+    request.setCharacterEncoding("utf-8");
+    String id = request.getParameter("ID");
+    String name = request.getParameter("name");
+    String password = request.getParameter("password");
+    String clssification = request.getParameter("classification");
+//객체참조변수 선언    
+    
+    PreparedStatement pstmt = null;
+    Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+    Connection conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root"); //create connection
+    
+    pstmt = conn.prepareStatement("UPDATE login SET name=?,password=?,classification=? WHERE ID=?");
+    pstmt.setString(1, name);
+    pstmt.setString(2, password);
+    pstmt.setString(3, classification);
+    pstmt.setString(4, ID);
+//쿼리문 실행    
+    pstmt.executeUpdate();
+//객체 종료    
+    pstmt.close();
+    conn.close();
+//response    
+    response.sendRedirect("memberlistform.jsp");
+}
+catch(Exception e){
+	  out.println( e );
+	 }
+%>
+</body>
+</html>

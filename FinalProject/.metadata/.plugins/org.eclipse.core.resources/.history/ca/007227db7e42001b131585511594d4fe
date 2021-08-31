@@ -1,0 +1,100 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>member modification</title>
+<script>
+function validate() //to check if the inserted values are correct for form
+{
+	
+	
+	var ID_valid= /^[0-9]{1,10}$/;  //pattern valid ID validation
+	var name_valid= /^[a-z A-Z]+$/; //pattern allowed alphabet a-z or A-Z 
+	var password_valid=/^[A-Z a-z 0-9 !@#$%&*()<>]{6,12}$/; //pattern password allowed A to Z, a to z, 0-9, !@#$%&*()<> charecter 
+	var classification_valid= /^[a-z A-Z]+$/;//pattern allowed alphabet a-z or A-Z 
+		
+	var ID = document.getElementByName("ID"); //textbox id 
+	var name = document.getElementByName("name"); //textbox id name
+    var password = document.getElementByName("password"); //textbox id password
+    var classification = document.getElementsByName"classification");  //checkbox id classification
+ 
+   
+    if(!ID_valid.test(ID.value) || ID.value==''|| ID.value==null) 
+    {
+		alert("Enter Valid ID"); //alert message
+        ID.focus();
+        ID.style.background = '#f08080'; //make the ID blanck red
+        return false;                    
+    }
+	if(!name_valid.test(name.value) || name.value=='' ||name.value==null) 
+    {
+		alert("Enter name (Alphabet Only)"); //alert message
+        name.focus();
+        name.style.background = '#f08080'; //make the name blanck red
+        return false;                    
+    }
+	
+	if(!password_valid.test(password.value) || password.value=='' || password.value==null) 
+    {
+		alert("Enter the Password (Must Be 6 to 12 and allowed !@#$%&*()<> character)"); //alert message
+        password.focus();
+        password.style.background = '#f08080'; //make the password blanck red
+        return false;                    
+    }
+	if(!classification_valid.test(classification.value) ||classification.value==''|| classification.value==null) 
+    {
+		alert("Enter Valid classification(Buyer or Seller)"); //alert message
+        classification.focus();
+        classification.style.background = '#f08080'; //make the classification blanck red
+        return false;                    
+    }
+	
+	
+}
+
+</script>
+</head>
+<body>
+<%
+    request.setCharacterEncoding("utf-8");
+    String ID = request.getParameter("mod"); // data "ID" sent when modify button was clicked 
+  
+ try {//the modify pageConnection 
+    	
+  
+    PreparedStatement pstmt = null; 
+    ResultSet rs = null;
+
+    Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+    Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root"); //create connection
+    
+   
+   	pstmt = con.prepareStatement("SELECT ID,name,password,classification FROM login WHERE ID=?");//sql insert query
+    pstmt.setString(1,ID);
+  
+    rs = pstmt.executeQuery();//execute query
+ 
+    rs.next(); //use the result value
+%>
+    <form action = "memberUpdateAction.jsp" method="post" onsubmit="return validate();"> <!-- when click the complete button, inserted data go to memberUpdateAction.jsp -->
+
+        ID : <input type="text" name="ID" value=<%=rs.getString("id")%> readonly> <br>
+        name : <input type="text" name="name" value=<%=rs.getString("name")%>> <br>
+        password : <input type="text" name="password" value=<%=rs.getString("password")%>> <br>
+        classification : <input type="text" name="classification" value=<%=rs.getString("classification")%>> <br>
+        <input type="submit" value="complete">
+    </form>
+    <a href="<%=request.getContextPath() %>register.jsp">register page</a> 
+    <a href="<%=request.getContextPath() %>memberlistform.jsp">member list</a>
+<%
+}
+
+ catch(Exception e){
+ out.println( e );
+}
+%>
+</body>
+</html>

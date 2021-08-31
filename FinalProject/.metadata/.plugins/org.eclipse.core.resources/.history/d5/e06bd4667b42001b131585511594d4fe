@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>member modification</title>
+</head>
+<body>
+<%
+String sId = (String)session.getAttribute("txt_ID");
+if(sId == null) {
+    response.sendRedirect("index.jsp");
+}
+ else {
+//the modify page
+
+    request.setCharacterEncoding("utf-8");
+    String ID = request.getParameter("mod"); // data "ID" sent when modify button was clicked 
+    Connection conn = null; //declare connection
+    PreparedStatement pstmt = null; 
+    ResultSet rs = null;
+
+	Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+ 
+    conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root");  //create connection
+  
+    pstmt = conn.prepareStatement("SELECT ID,name,password,classification FROM login WHERE ID=?");//sql insert query
+    pstmt.setString(1,ID);
+  
+    rs = pstmt.executeQuery();//execute query
+ 
+    rs.next(); //use the result value
+%>
+    <form action = "<%=request.getContextPath() %>memberUpdateAction.jsp" method="post"> <!-- when click the complete button, inserted data go to memberUpdateAction.jsp -->
+
+        ID : <input type="text" name="ID" value=<%=rs.getString("id")%> readonly> <br>
+        name : <input type="text" name="name" value=<%=rs.getString("name")%>> <br>
+        password : <input type="text" name="password" value=<%=rs.getString("password")%>> <br>
+        classification : <input type="text" name="classification" value=<%=rs.getString("classification")%>> <br>
+        <input type="submit" value="complete">
+    </form>
+    <a href="<%=request.getContextPath() %>register.jsp">register page</a> 
+    <a href="<%=request.getContextPath() %>memberlistform.jsp">member list</a>
+<%
+}
+%>
+</body>
+</html>

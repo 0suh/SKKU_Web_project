@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Welcome : <%=session.getAttribute("classify")%></title>
+	<!-- <link rel="stylesheet" href="css/main.css">-->
+	<link rel="stylesheet" href="css/login-register.css">
+
+</head>
+
+<body>
+
+
+    <div class="main-content">
+	
+	
+	
+	<%
+	if(session.getAttribute("login")==null || session.getAttribute("login")==" ") //check condition unauthorize user not direct access welcome.jsp page
+	{
+		response.sendRedirect("index.jsp"); 
+	}
+	%>
+	
+	<h1> Welcome, <%=session.getAttribute("login")%> </h1>
+<%	if(session.getAttribute("classify")=="buyer"){
+	response.sendRedirect("welcomebuyer.jsp");
+	}
+%>
+
+ <%
+ //String userCourses = (String)session.getAttribute("courses");
+	// String[] coursesList = userCourses.split(",");
+//	 out.println("<ul>");
+//	 out.println("<h2>"+ "Your registered courses Are "+"</h2>");
+//	
+//	 for (int i=1;i<coursesList.length;i++){
+//		 out.println(""+"<li>"+coursesList[i]+"</li>"+"");
+//	 }
+//	 out.println("</ul>");
+	 %>
+
+	<h2><a href="logout.jsp">Logout</a></h2>
+    
+    
+	
+    </div>
+
+</body>
+
+</html>

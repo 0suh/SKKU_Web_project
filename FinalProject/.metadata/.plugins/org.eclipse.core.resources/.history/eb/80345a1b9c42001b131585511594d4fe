@@ -1,0 +1,66 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Welcome! SKKU Flea Market for seller</title>
+
+<link rel="stylesheet" href="css/main.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/login-register.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/market.css"> <!-- link with css file -->
+
+</head>
+<body>
+
+<ul>
+
+<li><div class="contact"><h1>Contact Us</h1></div></li>
+</ul>
+
+   
+    <div class="main-content">
+   
+      <form class="form-register" method="post">
+       <div class="form-register-with-ID">
+       <div class="form-white-background">
+      <div class="form-row">
+     <label>
+    <span>name</span>
+     <input type="text" name="txt_name" id="name" placeholder="enter name"> <!-- blank to insert the name -->
+ 		</label>
+        </div>
+        
+         <div class="form-row">
+     <label>
+    <span>address</span>
+     <input type="text" name="txt_address" id="address" placeholder="enter address"> <!-- blank to insert the address -->
+ 		</label>
+        </div>
+        
+          <div class="form-row">
+     <label>
+     <span>seller/buyer</span>
+     <input type="text" name="txt_classification" id="classification" placeholder="seller/buyer"> <!-- blank to insert the classification -->
+ 		</label>
+        </div>
+        
+        <div class="form-row">
+        <label>
+        <span>message</span>
+        <textarea id="subject" name="subject" placeholder="enter message" style="height:100px; width:200px"></textarea>
+        </label>
+        </div>
+        
+        <input type="submit" value="Send Message">
+        </div>
+         </div>
+      </form>
+      
+    </div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<%@ page contentType="text/html;charset=utf-8" import="java.sql.*" %>
+
+<%
+ request.setCharacterEncoding("utf-8");
+ String productname = request.getParameter("buy");
+
+ try{
+	 Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+  Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root"); //create connection
+  Statement stat = con.createStatement();
+
+  String query = "update product set status=? where productname='" + request.getParameter("buy")+"'"; //sql update query 
+  stat.setString("sold");
+  stat.executeUpdate(query); //return 1.
+  stat.close(); // Statement exit
+  con.close(); // Connection exit
+  response.sendRedirect("productstatus.jsp");
+ }
+
+  catch(Exception e){
+  out.println( e );
+ }
+ %> pstmt = conn.prepareStatement("UPDATE login SET name=?,password=?,classification=? WHERE ID=?"); //sql update query
+    pstmt.setString(1, name);
+    pstmt.setString(2, password);
+    pstmt.setString(3, classification);
+    pstmt.setString(4, ID);
+ 

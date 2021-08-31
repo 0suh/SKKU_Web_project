@@ -1,0 +1,27 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Welcome! SKKU Flea Market for seller</title>
+
+<link rel="stylesheet" href="css/main.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/login-register.css"> <!-- link with css file -->
+
+</head>
+<body>
+
+<ul>
+<h1>SKKU Flea Market</h1>
+<li>Home</li>
+<li>Upload Product</li>
+<li>Product Status</li>
+<li>Contact Us</li>
+</ul>
+
+
+<h2><a href="logout.jsp">Logout</a></h2>
+</body>
+</html>

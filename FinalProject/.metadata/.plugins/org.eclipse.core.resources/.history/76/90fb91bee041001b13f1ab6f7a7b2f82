@@ -1,0 +1,247 @@
+
+<%@ page import="java.sql.*" %>  
+
+<%
+if(session.getAttribute("login")!=null) //check login session user not access or back to register.jsp page
+{
+	response.sendRedirect("welcome.jsp");
+}
+%>
+
+
+<%
+try
+{
+	Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+	
+	Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root");  //create connection
+	
+	if(request.getParameter("btn_register")!=null) //check register button click event not null
+	{
+		String ID,name,password,classification;
+		
+		ID=request.getParameter("txt_ID"); //txt_ID
+		name=request.getParameter("txt_name"); //txt_name
+		password=request.getParameter("txt_password"); //txt_password
+		classification=request.getParameter("txt_classification"); //txt_classification
+		
+		PreparedStatement pstmt=null; //create statement
+		
+		pstmt=con.prepareStatement("insert into login(ID,name,password,classification) values(?,?,?,?)"); //sql insert query
+		pstmt.setString(1,ID);
+		pstmt.setString(2,name);
+		pstmt.setString(3,password);
+		pstmt.setString(4,classification);
+		
+		pstmt.executeUpdate(); //execute query
+		
+		request.setAttribute("successMsg","Register Successfully...! Please login"); //register success messeage
+
+		con.close(); //close connection
+	}
+	if(request.getParameter("btn_duplicate")!=null)
+	{
+		String dbID;
+		String ID=request.getParameter("txt_ID");
+		
+		PreparedStatement pstmt=null;
+		pstmt=con.prepareStatement("select ID from login where ID=?");
+		pstmt.setString(1,ID);
+		ResultSet rs=pstmt.executeQuery();
+		
+		if(rs.next())
+		{
+			dbID=rs.getString("ID");
+			
+			if(ID.equals(dbID))
+			{
+				request.setAttribute("errorMsg","Not Usable ID"); //invalid error message for email or password wrong
+			}
+		}
+		else
+		{
+			request.setAttribute("successMsg","Usable ID"); //invalid error message for email or password wrong
+		}
+		
+		
+	}
+		
+	
+}
+catch(Exception e)
+{
+	out.println(e);
+}
+
+
+			
+%>  
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+	<title>Register </title>
+
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/login-register.css">
+	
+	<!-- javascript for registeration form validation-->
+	<script>	
+	
+		function validate()
+		{
+			
+			
+			var ID_valid= /^[0-9]{1,10}$/;  //pattern valid ID validation
+			var name_valid= /^[a-z A-Z]+$/; //pattern allowed alphabet a-z or A-Z 
+			var password_valid=/^[A-Z a-z 0-9 !@#$%&*()<>]{6,12}$/; //pattern password allowed A to Z, a to z, 0-9, !@#$%&*()<> charecter 
+			var classification_valid=/^[a-z A-Z]+$/;//buyer or seller
+				
+			var ID = document.getElementById("ID"); //textbox id email
+			var name = document.getElementById("name"); //textbox id name
+            var password = document.getElementById("password"); //textbox id password
+            var classification = document.getElementById("classification"); //checkbox id classification
+            
+            if(!ID_valid.test(ID.value) || ID.value==''|| ID.value==null) 
+            {
+				alert("Enter Valid ID");
+                ID.focus();
+                ID.style.background = '#f08080';
+                return false;                    
+            }
+			if(!name_valid.test(name.value) || name.value=='' ||name.value==null) 
+            {
+				alert("Enter name (Alphabet Only)");
+                name.focus();
+                name.style.background = '#f08080';
+                return false;                    
+            }
+			
+			if(!password_valid.test(password.value) || password.value=='' || password.value==null) 
+            {
+				alert("Enter the Password (Must Be 6 to 12 and allowed !@#$%&*()<> character)");
+                password.focus();
+                password.style.background = '#f08080';
+                return false;                    
+            }
+			if(!classification_valid.test(classification.value) || classification.value=='' ||classification.value==null) 
+            {
+				alert("Choose the classification");
+                classification.focus();
+                classification.style.background = '#f08080';
+                return false;                    
+            }
+			
+		}
+		
+		function doOpenCheck(check){
+		    var obj = document.getElementsByName("txt_classification");
+		    for(var i=0; i<obj.length; i++){
+		        if(obj[i] != check){
+		            obj[i].checked = false;
+		        }
+		    }
+		}//this function makes the person can check only one checkbox button (seller or buyer)
+
+		
+		
+	</script>	
+
+</head>
+
+<body>
+
+    <ul>
+        
+    </ul>
+
+    <div class="main-content">
+
+        <form class="form-register" method="post" onsubmit="return validate();">
+
+            <div class="form-register-with-email">
+
+                <div class="form-white-background">
+
+                    <div class="form-title-row">
+                        <h1>Register</h1>
+                    </div>
+				   
+					<p style="color:#2E9AFE">				   		
+					<%
+					if(request.getAttribute("successMsg")!=null)
+					{
+						out.println(request.getAttribute("successMsg")); //register success message
+					}
+					%>
+					</p>
+					<p style="color:red">				   		
+					<%
+					if(request.getAttribute("errorMsg")!=null)
+					{
+						out.println(request.getAttribute("errorMsg")); //error message for email or password 
+					}
+					%>
+				
+					</p>
+				   
+				   
+				   <div class="form-row">
+                        <label>
+                            <span>ID</span>
+                            <input type="text" name="txt_ID" id="ID" placeholder="enter ID">
+                            
+                            
+                            
+                        </label>
+                        
+                    </div>
+                    <input type="submit" name="btn_duplicate" value="Duplicate">
+                   
+					<div class="form-row">
+                        <label>
+                            <span>name</span>
+                            <input type="text" name="txt_name" id="name" placeholder="enter name">
+                        </label>
+                    </div>
+
+                    
+
+                    <div class="form-row">
+                        <label>
+                            <span>Password</span>
+                            <input type="password" name="txt_password" id="password" placeholder="enter password">
+                        </label>
+                    </div>
+                     <div class="form-row">
+                        <label>
+                            <span>Classification</span>
+                            
+                            <input type="checkbox" id="classification" name="txt_classification" value="buyer" onclick="doOpenCheck(this);" style="width:70px">buyer
+                           
+                            <input type="checkbox" id="classification" name="txt_classification" value="seller" onclick="doOpenCheck(this);" style="width:70px">seller
+                         
+                        </label>
+                        
+                    </div>
+
+					<input type="submit" name="btn_register" value="Register">
+					
+                </div>
+				
+                <a href="index.jsp" class="form-log-in-with-existing">Already have an account? <b> Login here </b></a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

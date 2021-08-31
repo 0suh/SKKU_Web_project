@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<%@ page import="java.util.*" %>    
+
+ 
+
+
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>member list</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/login-register.css">
+</head>
+<body>
+<div class="main-content">
+<%
+response.setContentType("text/html;charset=utf-8");
+request.setCharacterEncoding("utf-8"); //set charset, encoding
+Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+Connection con=null;
+Statement stmt=null;
+ResultSet rs=null;
+
+
+
+try
+{	
+	con=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root"); //create connection
+	stmt=con.createStatement();
+	
+	String query="select ID, name, password, classification from login"; //sql select query 
+	rs=stmt.executeQuery(query); //execute query and store in resultset object rs.	
+%>
+   <form action="memberdelete.jsp" method="post"> 
+   <span style="color:  #5f5f5f;text-align:center;padding:10px"><h1>Member list</h1></span>
+   <table style="color:  #5f5f5f;background-color: #f3f3f3;text-align: center;font-family:sans-serif;padding:10px;width:70%;margin:0px auto;height:50%">
+   
+   <tr style="background-color:#e0d4d3"> 
+   <td>ID</td> <!-- table for ID -->
+   <td>name</td> <!-- table for name -->
+   <td>password</td> <!-- table for password -->
+   <td>classification(Buyer/Seller)</td> <!-- table for classification -->
+   <th>Modify</th> <!-- table for modify -->
+   <th>Delete</th> <!-- table for delete -->
+   </tr>
+   <%
+   while(rs.next()){ //get object's field value
+	   %>
+	   <tr>
+   
+	   <td><%=rs.getString("ID") %></td> <!-- get ID -->
+	   <td><%=rs.getString("name") %></td> <!-- get name -->
+	   <td><%=rs.getString("password") %></td> <!-- get password -->
+	   <td><%=rs.getString("classification") %></td> <!-- get classification -->
+	   <td><a href="membermodify.jsp?mod=<%=rs.getString("ID") %>" style="text-decoration: none; color:#6caee0">modify</a></td> 
+	   <td><a href="memberdelete.jsp?del=<%=rs.getString("ID") %>" style="text-decoration: none; color:#6caee0">delete</a></td><!-- delete member --> 
+     </tr>
+     <%
+     } //end of the while
+   %>
+     </table>
+     <a href="index.jsp" class="form-log-in-with-existing">Return to login page</a> <!-- return to login page -->
+    
+   <a href="register.jsp" class="form-log-in-with-existing">Return to register page</a> <!-- return to register page -->
+    
+   </form>
+   <%
+   rs.close(); // ResultSet exit
+   stmt.close(); // Statement exit
+   con.close();  // Connection exit
+}
+   catch(SQLException e){
+   out.println("err:"+e.toString());
+   }
+   %>
+   </div>
+   
+</body>
+</html>

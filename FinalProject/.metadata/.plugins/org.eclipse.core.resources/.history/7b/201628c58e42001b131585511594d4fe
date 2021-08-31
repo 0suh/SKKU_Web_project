@@ -1,0 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+ 
+<!DOCTYPE html>
+<%@ page import = "java.sql.*" %>
+<html>
+<head>
+<meta charset="utf-8">
+<title>member modification</title>
+
+<link rel="stylesheet" href="css/main.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/login-register.css"> <!-- link with css file -->
+
+</head>
+<body>
+
+welcome!buyerpage!
+<h2><a href="logout.jsp">Logout</a></h2>
+
+</

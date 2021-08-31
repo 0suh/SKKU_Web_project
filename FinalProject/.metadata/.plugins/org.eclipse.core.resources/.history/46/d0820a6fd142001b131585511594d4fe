@@ -1,0 +1,211 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ page import="java.io.*" %>
+<%@ page import = "java.sql.*" %>
+
+
+<%
+try
+{
+	Class.forName("com.mysql.cj.jdbc.Driver"); //load driver
+	
+	Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/dbuser","root","root");  //create connection
+	
+	if(request.getParameter("btn_productupload")!=null) //check product upload button click event not null
+	{
+		String productname,price,name,phonenumber,tradingplace,status;
+		
+		productname=request.getParameter("txt_productname"); //txt_productname
+		price=request.getParameter("txt_price"); //txt_price
+		name=request.getParameter("txt_name"); //txt_name
+		phonenumber=request.getParameter("txt_phonenumber"); //txt_phonenumber
+		tradingplace=request.getParameter("txt_tradingplace"); //txt_tradingplace
+	
+		status=request.getParameter("txt_status"); //txt_status
+		
+		PreparedStatement pstmt=null; //create statement
+		
+		pstmt=con.prepareStatement("insert into product(productname,price,name,phonenumber,tradingplace,status) values(?,?,?,?,?,?)"); //sql insert query
+		pstmt.setString(1,productname);
+		pstmt.setString(2,price);
+		pstmt.setString(3,name);
+		pstmt.setString(4,phonenumber);
+		pstmt.setString(5,tradingplace);
+
+		pstmt.setString(6,status);
+		
+		pstmt.executeUpdate(); //execute query
+		
+		request.setAttribute("successMsg","Product upload success!"); //product upload success messeage
+
+		con.close(); //close connection
+	}
+	
+}
+catch(Exception e)
+{
+	out.println(e);
+}
+
+
+			
+%>  
+<!DOCTYPE html>
+
+
+<html>
+<head>
+<meta charset="utf-8">
+<title>Upload Product</title>
+
+<link rel="stylesheet" href="css/main.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/login-register.css"> <!-- link with css file -->
+<link rel="stylesheet" href="css/market.css"> <!-- link with css file -->
+
+<script>
+
+function previewImage(f){ //function to preview the uploaded image
+	var file = f.files;
+	if(!/\.(gif|jpg|jpeg|png)$/i.test(file[0].name)){ //check the file type
+		alert('gif, jpg, png  : ' + file[0].name);
+		f.outerHTML = f.outerHTML;//initialize the selected image
+		document.getElementById('preview').innerHTML = '';
+	}
+	else {
+		var reader = new FileReader(); //use the FileReader()
+		reader.onload = function(rst){ //execute when file reading is completed
+			document.getElementById('preview').innerHTML='<img src="'+rst.target.result+'" style="width:100px;height:100px">';
+		}
+		reader.readAsDataURL(file[0]);//read the file
+	}
+}
+//<additional function>
+//doOpenCheck function makes the person can check only one checkbox button (auction or flea market only one!)
+function doOpenCheck(check){
+    var obj = document.getElementsByName("txt_status"); //checkbox id status
+    for(var i=0; i<obj.length; i++){
+        if(obj[i] != check){
+            obj[i].checked = false;
+        }
+    }
+}
+
+</script>
+
+
+</head>
+<body>
+
+<ul>
+<li>
+</li>
+</ul>
+
+ <div class="main-content">
+
+        <form class="form-register"  method="post" > 
+
+            <div class="form-register-with-ID">
+
+                <div class="form-white-background">
+
+                    <div class="form-title-row">
+                        <h1>Upload product</h1>
+                    </div>
+				   
+					<p style="color:#2E9AFE">				   		
+					<% 
+					 
+					if(request.getAttribute("successMsg")!=null)
+					{
+						out.println(request.getAttribute("successMsg")); //register success message
+					}
+					%>
+					</p>
+					<p style="color:red">				   		
+					<%//if there is something wrong, show error message
+					if(request.getAttribute("errorMsg")!=null)
+					{
+						out.println(request.getAttribute("errorMsg")); //error message for ID or password or classification 
+					}
+					%>
+				
+					</p>
+				   
+				   <div class="form-row">
+                        <label>
+                            <span>Product Name</span>
+                            <input type="text" name="txt_productname" id="productname" placeholder="enter Product Name"> <!-- blank to insert Product Name -->
+                            
+                        </label>
+                        
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>
+                            <span>Product Price</span>
+                            <input type="text" name="txt_price" id="price" placeholder="enter Product Price"> <!-- blank to insert the Product Price -->
+                        </label>
+                    </div>
+                    
+                     <div class="form-row">
+                        <label>
+                            <span>Seller Name</span>
+                            <input type="text" name="txt_name" id="name" placeholder="enter Name"> <!-- blank to insert Seller Name -->
+                            
+                        </label>
+                        
+                    </div>
+                    
+                    
+                    <div class="form-row">
+                        <label>
+                            <span>Phone Number</span>
+                            <input type="text" name="txt_phonenumber" id="phonenumber" placeholder="enter Phone Number">  <!-- blank to insert the Phone Number-->
+                        </label>
+                    </div>
+                    
+                    <div class="form-row">
+                        <label>
+                            <span>Trading Place</span>
+                            <input type="text" name="txt_tradingplace" id="tradingplace" placeholder="enter Trading Place">  <!-- blank to insert the Trading Place-->
+                        </label>
+                    </div>
+                    
+                     <div class="form-row">
+                        <label>
+                            <span>Product Image</span>
+                            <input type="file" name="img_image" id="image" accept="image/*" onchange="previewImage(this)">  
+                             <!-- blank to insert the Product Image-->
+                             <br>
+                          <div id="preview" style="margin:0px auto;text-align:center">
+                          </div> <!-- display preview image -->
+
+
+                        </label>
+                    </div>
+                    
+                    
+                    <div class="form-row">
+                        <label>
+                            <span>Status</span> <!-- check box input type: select auction or flea market-->
+                            
+                            <input type="checkbox" id="status" name="txt_status" value="auction" onclick="doOpenCheck(this);" style="width:70px">auction
+                            <input type="checkbox" id="status" name="txt_status" value="fleamarket" onclick="doOpenCheck(this);" style="width:70px">flea market
+                         
+                        </label>
+                        
+                    </div>
+					<input type="submit" name="btn_productupload" value="Product Upload"> <!-- submit login-button -->
+					
+                </div>
+				
+             <a href="welcomeseller.jsp">Home</a>
+            </div>
+
+        </form>
+
+    </div>
+
+
+</body>
+</html>
